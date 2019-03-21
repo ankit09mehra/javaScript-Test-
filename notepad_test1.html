@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.input_class {  
+  width: 300px;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  font-weight: bold;
+}
+.buttons{
+	background-color: white;
+ 	width: 60px;
+  	height: 32px;
+    border: 0px solid white;
+    color: black;
+}
+.buttons:focus{
+	outline:none;
+    }
+    
+input:focus {
+  outline:none;
+}
+h2{
+font-family: Arial;
+}
+</style>
+</head>
+<body>
+
+<h2>ADD ITEM</h2>
+<hr noshade>
+<input class="input_class" type="text" name="item" id="user_input"> 
+<button class="buttons" onclick="add()">Add</button> <br>
+
+<h2>TODO</h2>
+<hr noshade >
+
+<div id='todo-items'>
+</div>
+
+
+<h2>COMPLETED</h2>
+<hr noshade>
+
+<div id="completed-items">
+</div>
+
+
+
+<script>
+
+let items = [];
+let striked =[];
+
+function getTemplate(value,i){
+	return '<p><input type="checkbox" onClick="complete('+i+')"> <span  id="display">'+value+'</span><button class="buttons" onclick="edit('+i+')">Edit</button><button class="buttons" onclick="del('+i+')">Delete</button></p>' ;
+}
+
+
+function getStrikedTemplate(value,i){
+	return '<p><input id="myCheck" type="checkbox"  onClick="complete('+i+')"> <strike><span id="display">'+value+'</span></strike><button class="buttons" onclick="editStriked('+i+')">Edit</button><button class="buttons" onclick="delStriked('+i+')">Delete</button></p>' ;
+}
+
+
+function getEditTemplate(value,i){
+return '<p><input type="checkbox"  > <input type="text" id="edit-input" class="input_class" value='+value+'></input><button class="buttons" onclick="save('+i+')">Save</button><button class="buttons" onclick="del('+i+')">Delete</button></p>' ;
+}
+
+function add() {
+	var value = document.getElementById('user_input').value;
+    items.push(value);
+    document.getElementById('todo-items').innerHTML = '';
+    for(let i =0;i<items.length;i++){
+    	document.getElementById('todo-items').innerHTML+=getTemplate(items[i],i);
+    }
+ 	
+ }
+ 
+ function del(i) {
+ 	//document.getElementById('todo-items').innerHTML+=i;
+    items.splice(i,1);
+    document.getElementById('todo-items').innerHTML = '';
+    for(let i =0;i<items.length;i++){
+    	document.getElementById('todo-items').innerHTML+=getTemplate(items[i],i);
+    }
+    
+ }
+ 
+ 
+ function edit(index){
+    document.getElementById('todo-items').innerHTML = '';
+    for(let i =0;i<items.length;i++){
+    	if(index == i){
+    		document.getElementById('todo-items').innerHTML+=getEditTemplate(items[i],i);
+        }else{
+        	document.getElementById('todo-items').innerHTML+=getTemplate(items[i],i);
+       	}
+    }
+ 
+ }
+ 
+ function save(i){
+ 	items[i] = document.getElementById('edit-input').value;
+    document.getElementById('todo-items').innerHTML = "";
+     for(let i =0;i<items.length;i++){
+    	document.getElementById('todo-items').innerHTML+=getTemplate(items[i],i);
+    }
+   
+  }
+  
+  function complete(i){
+  	striked.push(items[i]);
+    del(i);
+    
+    document.getElementById('completed-items').innerHTML = "";
+     for(let i =0;i<striked.length;i++){
+    	document.getElementById('completed-items').innerHTML+=getStrikedTemplate(striked[i],i);
+        document.getElementById('myCheck').checked = true;
+    }
+  }
+    
+    function delStriked(i) {
+    striked.splice(i,1);
+    document.getElementById('completed-items').innerHTML = '';
+    for(let i =0;i<striked.length;i++){
+    	document.getElementById('completed-items').innerHTML+=getStrikedTemplate(striked[i],i);
+    }
+    
+ }
+ 
+ function editStriked(index){
+ 
+    document.getElementById('completed-items').innerHTML = '';
+    for(let i =0;i<striked.length;i++){
+    	if(index == i){
+        	items.push(striked[i]);
+            striked.splice(i,1);
+       
+    		document.getElementById('todo-items').innerHTML+=getEditTemplate(items[items.length-1],i);
+        }else{
+        	document.getElementById('completed-items').innerHTML+=getStrikedTemplate(striked[i],i);
+       	}
+    }
+ 
+ }
+ 
+ 
+</script>
+
+</body>
+</html>
